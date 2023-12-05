@@ -6,18 +6,7 @@ defmodule Day03 do
 
   def part2(file_name \\ "example.txt") do
     {numbers, symbols} = parse("priv/" <> file_name, ~r/\*/)
-
-    Enum.reduce(symbols, 0, fn coords, acc ->
-      adjacent =
-        Enum.filter(numbers, fn {_num, neighbors} -> MapSet.member?(neighbors, coords) end)
-
-      if length(adjacent) == 2 do
-        [{first, _}, {second, _}] = adjacent
-        acc + first * second
-      else
-        acc
-      end
-    end)
+    sum_of_gear_ratios(numbers, symbols)
   end
 
   def parse(file_name, regex) do
@@ -33,6 +22,20 @@ defmodule Day03 do
     |> File.stream!()
     |> Stream.map(&String.trim_trailing/1)
     |> Stream.with_index()
+  end
+
+  def sum_of_gear_ratios(numbers, symbols) do
+    Enum.reduce(symbols, 0, fn coords, acc ->
+      adjacent =
+        Enum.filter(numbers, fn {_num, neighbors} -> MapSet.member?(neighbors, coords) end)
+
+      if length(adjacent) == 2 do
+        [{first, _}, {second, _}] = adjacent
+        acc + first * second
+      else
+        acc
+      end
+    end)
   end
 
   def count_part_numbers(numbers, symbols) do
